@@ -1,25 +1,20 @@
-FROM ubuntu:24.04
+FROM python:3.12-slim-bookworm
 
-# Đảm bảo các gói Python và pip cơ bản đầy đủ
-RUN apt-get update && apt-get install -y \
+# Cài đặt các gói phụ thuộc và texlive
+RUN apt-get update && apt-get install -y --no-install-recommends \
     texlive-base \
     texlive-latex-extra \
     texlive-pictures \
     ghostscript \
     poppler-utils \
-    python3 \
-    python3-pip \
-    python3-venv \
-    python3-dev \
-    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Nâng cấp pip theo cách ổn định hơn
-RUN pip3 install --upgrade --no-cache-dir pip
+# Update pip
+RUN python -m pip install --upgrade --no-cache-dir pip
 
 WORKDIR /app
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
