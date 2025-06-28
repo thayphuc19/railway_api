@@ -1,6 +1,6 @@
 FROM ubuntu:24.04
 
-# Cài đặt các phụ thuộc cần thiết (thêm python3-venv để fix lỗi pip)
+# Đảm bảo các gói Python và pip cơ bản đầy đủ
 RUN apt-get update && apt-get install -y \
     texlive-base \
     texlive-latex-extra \
@@ -10,14 +10,15 @@ RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
     python3-venv \
+    python3-dev \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Nâng cấp pip để tránh lỗi khi cài requirements
-RUN python3 -m pip install --upgrade pip
+# Nâng cấp pip theo cách ổn định hơn
+RUN pip3 install --upgrade --no-cache-dir pip
 
 WORKDIR /app
 COPY requirements.txt .
-
 RUN pip install -r requirements.txt
 
 COPY . .
